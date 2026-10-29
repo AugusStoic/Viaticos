@@ -1,0 +1,19 @@
+{
+  "actualizado": "29/10/2026",
+
+  "oficina": {
+    "nombre": "Oficina",
+    "direccion": "Arcos 2215, Belgrano, CABA",
+    "detalle": "Oficina 102"
+  },
+
+  "tarifas": {
+    "Colectivo": 1002,
+    "Subte": 1753,
+    "Tren": 480
+  },
+
+  "motivos": ["VIAJES", "NAFTA", "LLAVES", "INSUMOS", "ESTACIONAMIENTO", "PEAJE", "TRÁMITES", "OTROS"],
+
+  "propositos": ["Cobranza", "Visita a cliente", "Supervisión", "Compra", "Trámite"]
+}

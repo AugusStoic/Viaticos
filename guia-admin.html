@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Guía Administración</title>
+  <style>
+    :root { --verde: #0f7b5f; --texto: #1b1f1e; --gris: #5f6b68; --caja: #e3f3ee; --amarillo: #fff4cc; --rojo: #c0392b; --linea: #d5dedb; }
+    body { margin: 0 auto; max-width: 820px; padding: 16px; font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: #fff; }
+    h1 { color: var(--verde); font-size: 25px; margin: 4px 0 2px; }
+    h2 { font-size: 18px; margin: 20px 0 6px; color: var(--verde); }
+    ol, ul { padding-left: 22px; margin: 6px 0; }
+    li { margin: 3px 0; }
+    code, pre { font-family: Consolas, "Courier New", monospace; background: #f1f4f3; border-radius: 6px; }
+    code { padding: 1px 5px; }
+    pre { padding: 8px 10px; overflow-x: auto; font-size: 14px; margin: 6px 0; }
+    .caja { background: var(--caja); border-radius: 12px; padding: 12px 14px; margin: 10px 0; }
+    .ojo { background: var(--amarillo); border-radius: 12px; padding: 10px 14px; margin: 10px 0; }
+    .chico { color: var(--gris); font-size: 14px; }
+    label { font-weight: 700; display: block; margin: 12px 0 4px; }
+    input[type=password], input[type=text], textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 8px 10px; border: 2px solid var(--linea); border-radius: 8px; background: #fff; }
+    textarea { min-height: 120px; font-family: Consolas, "Courier New", monospace; font-size: 13px; white-space: pre; }
+    .fila { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+    .fila > div { flex: 1; min-width: 200px; }
+    button, .boton { font: inherit; font-weight: 700; background: var(--verde); color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; cursor: pointer; display: inline-block; }
+    button.sec { background: #fff; color: var(--verde); border: 2px solid var(--verde); }
+    .salida { white-space: pre-wrap; margin-top: 8px; }
+    .bien { color: var(--verde); font-weight: 700; } .mal { color: var(--rojo); font-weight: 700; }
+    @media print { body { font-size: 12px; padding: 0; } h2 { font-size: 14px; margin-top: 10px; } .no-imprimir { display: none; } }
+  </style>
+</head>
+<body>
+  <h1>🛠️ Viáticos · guía para administración</h1>
+  <p class="chico">La app está en GitHub (cuenta AugusStoic, proyecto <b>Viaticos</b>). Las listas de <b>personas y servicios</b> están en el archivo
+    <code>datos.cifrado</code>, que solo se puede abrir con el <b>código de la empresa</b>. Las <b>tarifas</b> están en <code>config.json</code>.
+    Los cambios llegan a los celulares en 1 o 2 minutos, la próxima vez que abren la app con internet.</p>
+
+  <h2>1. Cambiar personas o servicios</h2>
+  <div class="caja no-imprimir">
+    <p class="chico" style="margin-top:0">Todo esto pasa <b>dentro de tu navegador</b>: las listas y el código no se mandan a ningún lado.</p>
+
+    <label for="codigo">Código de la empresa</label>
+    <div class="fila">
+      <div><input type="password" id="codigo" autocomplete="off" placeholder="El código que usa el personal"></div>
+      <button class="sec" id="abrir">Abrir los datos actuales</button>
+    </div>
+    <div id="salida-abrir" class="salida"></div>
+
+    <label for="personas">Personas <span class="chico">(optativo. Una por línea: nombre y apellido, y el perfil separado por <code>;</code> o TAB: pie, camioneta o admin.
+      Si lo dejás vacío, cada persona escribe su nombre la primera vez)</span></label>
+    <textarea id="personas" spellcheck="false" placeholder="Andrés Aquino; pie&#10;Gustavo Ibañez; camioneta&#10;Erick Caballero; admin"></textarea>
+    <div class="fila"><span class="chico">o abrí un archivo:</span> <input type="file" id="arch-personas" accept=".txt,text/plain"></div>
+
+    <label for="servicios">Servicios <span class="chico">(pegá las columnas de tu Excel: Servicio, Calle, Nro, Localidad, Provincia)</span></label>
+    <textarea id="servicios" spellcheck="false" placeholder="Pegá acá desde Excel (Ctrl+V)"></textarea>
+    <div class="fila"><span class="chico">o abrí un archivo:</span> <input type="file" id="arch-servicios" accept=".txt,text/plain"></div>
+
+    <label for="codigo2">Repetí el código <span class="chico">(o escribí uno nuevo arriba y repetilo acá si querés cambiarlo)</span></label>
+    <input type="password" id="codigo2" autocomplete="off">
+
+    <div class="fila" style="margin-top:12px"><button id="generar">🔒 Generar datos.cifrado</button></div>
+    <div id="salida-generar" class="salida"></div>
+  </div>
+  <ol>
+    <li>Escribí el código y tocá <b>Abrir los datos actuales</b>: se cargan las listas que están publicadas.</li>
+    <li>Cambiá lo que necesites. Para los servicios, en tu Excel seleccioná la columna <b>Servicio</b> y, con <b>Ctrl</b> apretado, <b>Calle servicio</b>, <b>Nro</b>, <b>Localidad Servicio</b> y <b>Provincia</b>. Copiá y pegá en el cuadro reemplazando todo.
+      No hace falta limpiar nada: <b>las filas repetidas, los ceros y los títulos se ignoran solos</b>.</li>
+    <li>Repetí el código y tocá <b>Generar datos.cifrado</b>. Se descarga el archivo <code>datos.cifrado</code>.</li>
+    <li>En GitHub: proyecto <b>Viaticos</b> → <b>Add file → Upload files</b> → arrastrá <code>datos.cifrado</code> → <b>Commit changes</b>. Reemplaza al anterior.</li>
+  </ol>
+
+  <h2>2. Cambiar el código de la empresa</h2>
+  <p>Hacelo si alguien deja la empresa. Abrí los datos con el código viejo, escribí el <b>nuevo</b> arriba y en "Repetí el código", generá y subí el archivo.
+    Después mandale el código nuevo al personal: la app les avisa sola que tienen que escribirlo, y mientras tanto pueden seguir cargando gastos.</p>
+  <div class="ojo">⚠️ Si se pierde el código <b>no hay forma de recuperarlo</b>. Guardalo en un lugar seguro y usá uno de <b>10 letras o números como mínimo</b>, que no sea fácil de adivinar
+    (por ejemplo <code>escoba-trueno-4817</code>). Sin el código, abrir el archivo es prácticamente imposible.</div>
+
+  <h2>3. Tarifas (archivo <code>config.json</code>)</h2>
+  <p>En GitHub abrí <b>config.json</b> → lápiz ✏️ → cambiá los números → <b>Commit changes</b>. Números sin puntos ni signo $; los centavos van con punto (<code>887.87</code>).</p>
+<pre>"tarifas": { "Colectivo": 1002, "Subte": 1753, "Tren": 480 }</pre>
+  <p class="chico">Es solo el precio sugerido. La app después recuerda lo que paga cada persona en cada línea.</p>
+
+  <div class="caja no-imprimir">
+    <b>¿Quedó todo bien?</b> Con el código escrito arriba, tocá:
+    <div style="margin-top:8px"><button id="revisar">Revisar lo publicado</button></div>
+    <div id="resultado" class="salida"></div>
+  </div>
+
+  <h2>4. Pasar el Excel que te mandan a tu "Tablero de Viáticos"</h2>
+  <ol>
+    <li>Abrí el archivo <b>Viaticos_Nombre_fecha.xlsx</b> que te llegó por WhatsApp. Tiene las columnas <b>Fecha | Motivo | Servicio / destino | Gasto $ | Observaciones</b>.</li>
+    <li>Seleccioná desde <b>A2</b> hasta la última fila de la columna <b>E</b> (sin los títulos) y copiá con <b>Ctrl+C</b>.</li>
+    <li>En el tablero, pestaña de esa persona, clic en la primera fila vacía de la columna Fecha → clic derecho → <b>Pegar valores</b> (ícono 123).</li>
+  </ol>
+  <p class="chico">Las fechas son fechas de verdad y los montos son números: se pueden sumar y filtrar sin arreglar comas ni puntos.</p>
+
+  <h2>5. Para tener en cuenta</h2>
+  <ul>
+    <li><b>Incorporaciones:</b> alguien nuevo puede empezar enseguida tocando <b>"➕ No estoy en la lista"</b>. Igual agregalo en el punto 1 cuando puedas.</li>
+    <li>Los gastos quedan guardados <b>solo en el celular</b> de cada persona. El WhatsApp diario es tu copia.</li>
+    <li>Las fotos de tickets se borran del celular a los 60 días, pero quedan en tu WhatsApp.</li>
+    <li>Lo que se ve online es el programa, las tarifas y la dirección de la oficina. Los nombres y los servicios están cifrados.</li>
+  </ul>
+
+  <script src="datos.js"></script>
+  <script>
+    'use strict';
+    const $ = id => document.getElementById(id);
+    function personasATexto(lista) { return lista.map(p => p.nombre + '; ' + p.perfil).join('\n'); }
+    function serviciosATexto(lista) { return lista.map(s => s.nombre + '\t' + s.direccion).join('\n'); }
+    function hoy() { const d = new Date(); return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear(); }
+    async function bajarCifrado() {
+      const r = await fetch('datos.cifrado', { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status === 404 ? 'todavía no hay un datos.cifrado publicado' : 'no se pudo bajar datos.cifrado');
+      return r.text();
+    }
+
+    // Cargar un .txt en el cuadro
+    [['arch-personas', 'personas'], ['arch-servicios', 'servicios']].forEach(([inp, area]) => {
+      $(inp).onchange = async e => { const f = e.target.files[0]; if (f) $(area).value = await f.text(); };
+    });
+
+    // Abrir lo publicado
+    $('abrir').onclick = async () => {
+      const out = $('salida-abrir');
+      if (!$('codigo').value.trim()) { out.innerHTML = '<span class="mal">Escribí el código.</span>'; return; }
+      out.textContent = 'Abriendo...';
+      try {
+        const d = await Datos.descifrar(await bajarCifrado(), $('codigo').value);
+        $('personas').value = personasATexto(d.personas || []);
+        $('servicios').value = serviciosATexto(d.servicios || []);
+        out.innerHTML = `<span class="bien">✔ Abierto:</span> ${d.personas.length} personas y ${d.servicios.length} servicios (actualizado ${d.actualizado || '—'}).`;
+      } catch (e) {
+        out.innerHTML = '<span class="mal">✖ ' + (e.message === 'codigo incorrecto' ? 'Código incorrecto.' : e.message) + '</span>';
+      }
+    };
+
+    // Generar el archivo nuevo
+    $('generar').onclick = async () => {
+      const out = $('salida-generar');
+      const c1 = $('codigo').value, c2 = $('codigo2').value;
+      if (Datos.limpiarCodigo(c1).length < 10) { out.innerHTML = '<span class="mal">✖ El código tiene que tener al menos 10 letras o números.</span>'; return; }
+      if (Datos.limpiarCodigo(c1) !== Datos.limpiarCodigo(c2)) { out.innerHTML = '<span class="mal">✖ Los dos códigos no coinciden.</span>'; return; }
+      const personas = Datos.leerPersonas($('personas').value);
+      const servicios = Datos.leerServicios($('servicios').value);
+      if (!servicios.length) { out.innerHTML = '<span class="mal">✖ No hay ningún servicio cargado.</span>'; return; }
+      const texto = await Datos.cifrar({ actualizado: hoy(), personas: personas.lista, servicios }, c1);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([texto], { type: 'application/octet-stream' }));
+      a.download = 'datos.cifrado';
+      document.body.appendChild(a); a.click(); a.remove();
+      const sinDir = servicios.filter(s => !s.direccion).length;
+      out.innerHTML = `<span class="bien">✔ Listo: se descargó datos.cifrado</span> con ${personas.lista.length} personas y ${servicios.length} servicios.` +
+        (personas.errores.length ? '\n<span class="mal">⚠ Revisá: ' + personas.errores.join(' · ') + ' (quedaron como "pie")</span>' : '') +
+        (sinDir ? `\n⚠ ${sinDir} servicios sin dirección (no van a poder usar "Ver recorrido").` : '') +
+        '\nAhora subilo a GitHub (paso 4).';
+    };
+
+    // Revisar lo publicado
+    $('revisar').onclick = async () => {
+      const out = $('resultado');
+      const lineas = [];
+      try {
+        const txt = await (await fetch('config.json', { cache: 'no-store' })).text();
+        try {
+          const c = JSON.parse(txt);
+          lineas.push('<span class="bien">✔ config.json se lee bien</span>');
+          Object.entries(c.tarifas || {}).forEach(([m, v]) => lineas.push('   • Tarifa ' + m + ': ' + v + (typeof v === 'number' ? '' : '  <span class="mal">← tiene que ser un número sin comillas</span>')));
+          if (!c.oficina || !c.oficina.direccion) lineas.push('<span class="mal">✖ Falta la dirección de la oficina</span>');
+        } catch (e) {
+          const pos = Number((e.message.match(/position (\d+)/) || [])[1]);
+          lineas.push('<span class="mal">✖ config.json tiene un error cerca de la línea ' + (isNaN(pos) ? '?' : txt.slice(0, pos).split('\n').length) +
+            '.</span> Revisá que no falte o sobre una coma, y que los textos tengan comillas.');
+        }
+      } catch (e) { lineas.push('<span class="mal">✖ No se pudo abrir config.json (¿hay internet?)</span>'); }
+      try {
+        const cifrado = await bajarCifrado();
+        if (!$('codigo').value.trim()) lineas.push('✔ datos.cifrado está publicado. Escribí el código arriba para revisar su contenido.');
+        else {
+          const d = await Datos.descifrar(cifrado, $('codigo').value);
+          lineas.push(`<span class="bien">✔ datos.cifrado se abre con ese código:</span> ${d.personas.length} personas, ${d.servicios.length} servicios (actualizado ${d.actualizado}).`);
+        }
+      } catch (e) {
+        lineas.push('<span class="mal">✖ datos.cifrado: ' + (e.message === 'codigo incorrecto' ? 'no se abre con ese código' : e.message) + '</span>');
+      }
+      try {
+        const r = await fetch('servicios.txt', { cache: 'no-store' });
+        if (r.ok) lineas.push('<span class="mal">⚠ Todavía está publicado servicios.txt: borralo de GitHub, si no la lista se sigue viendo.</span>');
+      } catch (e) { /* no está: bien */ }
+      out.innerHTML = lineas.join('\n');
+    };
+  </script>
+</body>
+</html>

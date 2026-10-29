@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f7b5f">
+  <title>Viáticos Limpiarte</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="barra">
+    <span class="barra-titulo">Viáticos</span>
+    <span id="barra-quien" class="barra-quien"></span>
+  </header>
+
+  <!-- Cada pantalla se dibuja desde app.js -->
+  <main>
+    <section id="p-inicio" class="pantalla"></section>
+    <section id="p-hoy" class="pantalla"></section>
+    <section id="p-gasto" class="pantalla"></section>
+    <section id="p-historial" class="pantalla"></section>
+    <section id="p-ajustes" class="pantalla"></section>
+  </main>
+
+  <!-- Menú de abajo -->
+  <nav id="menu" class="menu oculto">
+    <button data-ir="hoy"><span>📋</span>Día</button>
+    <button data-ir="historial"><span>📊</span>Historial</button>
+    <button data-ir="ajustes"><span>⚙️</span>Ajustes</button>
+  </nav>
+
+  <!-- Ventana emergente (buscador de servicios, Excel, etc.) -->
+  <div id="modal" class="modal oculto">
+    <div id="modal-caja" class="modal-caja"></div>
+  </div>
+
+  <!-- Mensajito que aparece y se va solo -->
+  <div id="aviso" class="aviso oculto"></div>
+
+  <script src="xlsx-mini.js"></script>
+  <script src="datos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
